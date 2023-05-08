@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  main:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -8,4 +8,25 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8000:8000
+      - "${APP_PORT:-8000}:8000"
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    depends_on:
+      - mysql
+    networks:
+      - default
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${DB_PORT:-6603}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    networks:
+      - default
+networks:
+  default:
+    driver: bridge
