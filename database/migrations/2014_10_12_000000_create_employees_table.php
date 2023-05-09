@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('address');
+            $table->text('address');
             $table->string('phone');
             $table->date('birthdate');
             $table->uuid('company_id');

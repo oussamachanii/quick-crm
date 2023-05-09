@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id');
             $table->string('name');
             $table->string('address');
-            $table->string('capital')->nullable();
+            $table->integer('capital')->nullable();
             $table->timestamps();
         });
     }
