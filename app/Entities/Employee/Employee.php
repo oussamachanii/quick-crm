@@ -2,11 +2,11 @@
 
 namespace App\Entities\Employee;
 
-use App\Entities\ModelUuid;
+use App\Entities\Authenticatable;
 use App\Enums\EmployeeStatus;
 use Carbon\Carbon;
 
-class Employee extends ModelUuid
+class Employee extends Authenticatable
 {
     public const TABLE_NAME = 'employees';
 

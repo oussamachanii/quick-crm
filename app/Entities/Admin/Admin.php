@@ -2,9 +2,9 @@
 
 namespace App\Entities\Admin;
 
-use App\Entities\ModelUuid;
+use App\Entities\Authenticatable;
 
-class Admin extends ModelUuid
+class Admin extends Authenticatable
 {
     public const TABLE_NAME = 'admins';
 
