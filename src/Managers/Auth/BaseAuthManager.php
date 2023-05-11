@@ -6,11 +6,11 @@ use App\Entities\Authenticatable;
 use Crm\Services\Auth\AuthenticatableService;
 use Illuminate\Auth\AuthManager;
 
-class BaseAuthManager
+abstract class BaseAuthManager
 {
-    protected const GUARD_NAME = 'web';
+    public const GUARD_NAME = 'web';
 
-    private readonly AuthManager $authManager;
+    protected readonly AuthManager $authManager;
 
     public function __construct(
         private readonly AuthenticatableService $authService
@@ -18,7 +18,7 @@ class BaseAuthManager
         $this->authManager = app(AuthManager::class);
     }
 
-    protected function user(): ?Authenticatable
+    public function user(): ?Authenticatable
     {
         $user = $this->guard()->user();
         if (!$user instanceof Authenticatable) {
@@ -28,17 +28,14 @@ class BaseAuthManager
         return $this->authService->findById($user->getId());
     }
 
-    protected function guard()
-    {
-        return $this->authManager->guard(self::GUARD_NAME);
-    }
+    abstract protected function guard();
 
-    protected function check(): bool
+    public function check(): bool
     {
         return $this->guard()->check();
     }
 
-    protected function login(Authenticatable $authenticatable, bool $rememberMe = false): void
+    public function login(Authenticatable $authenticatable, bool $rememberMe = false): void
     {
         $this->guard()->login($authenticatable, $rememberMe);
     }

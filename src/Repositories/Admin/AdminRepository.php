@@ -13,4 +13,11 @@ class AdminRepository extends BaseRepository
             ->where(Admin::ID_COLUMN, $adminId)
             ->first();
     }
+
+    public function findByEmail(string $findByEmail): ?Admin
+    {
+        return Admin::query()
+            ->where(Admin::EMAIL_COLUMN, $findByEmail)
+            ->first();
+    }
 }

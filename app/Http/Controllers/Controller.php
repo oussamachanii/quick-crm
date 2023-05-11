@@ -9,4 +9,12 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    public function __construct() {}
+
+    public function view(string $view, array $data = [])
+    {
+        // Base information can be added here. Locale, Country, .....
+        return view($view, $data);
+    }
 }

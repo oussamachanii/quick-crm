@@ -1,5 +1,8 @@
 <?php
 
+use App\Entities\Admin\Admin;
+use Crm\Managers\Auth\Admin\AdminAuthManager;
+
 return [
 
     /*
@@ -36,10 +39,10 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+        AdminAuthManager::GUARD_NAME => [
+            'driver'   => 'session',
+            'provider' => Admin::TABLE_NAME,
+        ]
     ],
 
     /*
@@ -60,15 +63,10 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        Admin::TABLE_NAME => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+            'model'  => Admin::class,
+        ]
     ],
 
     /*
