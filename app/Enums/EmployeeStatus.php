@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum EmployeeStatus: int
 {
-    case CONFIRMED = 1;
-    case UNCONFIRMED = 0;
+    case ACTIVE = 1;
+    case INACTIVE = 0;
 }

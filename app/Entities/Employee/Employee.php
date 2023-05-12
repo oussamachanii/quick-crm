@@ -5,6 +5,7 @@ namespace App\Entities\Employee;
 use App\Entities\Authenticatable;
 use App\Enums\EmployeeStatus;
 use Carbon\Carbon;
+use Crm\Services\Employee\EmployeeService;
 
 class Employee extends Authenticatable
 {
@@ -49,7 +50,7 @@ class Employee extends Authenticatable
 
     public function getBirthDate(): Carbon
     {
-        return $this->getAttribute(self::BIRTHDAY_COLUMN);
+        return $this->getAttribute(self::BIRTHDATE_COLUMN);
     }
 
     public function getCompanyId(): string
@@ -60,6 +61,16 @@ class Employee extends Authenticatable
     public function getStatus(): EmployeeStatus
     {
         return $this->getAttribute(self::STATUS_COLUMN);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->getStatus() === EmployeeStatus::ACTIVE;
+    }
+
+    public function isInactive(): bool
+    {
+        return !$this->isActive();
     }
 
     public function getPassword(): string

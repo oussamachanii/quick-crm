@@ -13,8 +13,13 @@ class EmployeeService extends AuthenticatableService
     ) {
     }
 
-    public function findById(string $id): Employee
+    public function findById(string $id): ?Employee
     {
         return $this->employeeRepository->findById($id);
+    }
+
+    public function findByEmail(string $email): ?Employee
+    {
+        return $this->employeeRepository->findByEmail($email);
     }
 }

@@ -15,6 +15,13 @@ class EmployeeRepository extends BaseRepository
             ->first();
     }
 
+    public function findByEmail(string $email): ?Employee
+    {
+        return Employee::query()
+            ->where(Employee::EMAIL_COLUMN, $email)
+            ->first();
+    }
+
     public function getByCompanyId(string $companyId): Collection
     {
         return Employee::query()

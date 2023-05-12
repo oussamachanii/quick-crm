@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->uuid('id')->unique()->unique();
+            $table->string('name');
             $table->string('email')->unique();
             $table->uuid('token')->nullable();
             $table->uuid('admin_id');
+            $table->uuid('company_id');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('invitations');
     }
 };

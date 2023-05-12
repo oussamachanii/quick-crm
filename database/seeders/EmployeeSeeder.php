@@ -25,7 +25,7 @@ class EmployeeSeeder extends BaseSeeder
                     Employee::ADDRESS_COLUMN    => $this->faker->streetAddress(),
                     Employee::PHONE_COLUMN      => $this->faker->e164PhoneNumber(),
                     Employee::COMPANY_ID_COLUMN => $this->companySeeder->createOne()->getId(),
-                    Employee::STATUS_COLUMN     => EmployeeStatus::CONFIRMED,
+                    Employee::STATUS_COLUMN     => EmployeeStatus::ACTIVE,
                     Employee::PASSWORD_COLUMN   => Hash::make(self::PASSWORD),
                     Employee::BIRTHDATE_COLUMN  => $this->faker->date(),
                 ]

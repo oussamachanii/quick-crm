@@ -22,7 +22,7 @@ return new class extends Migration
             $table->uuid('company_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('status')->default(EmployeeStatus::UNCONFIRMED->value);
+            $table->integer('status')->default(EmployeeStatus::INACTIVE->value);
             $table->rememberToken();
             $table->timestamps();
         });
