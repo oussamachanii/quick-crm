@@ -47,7 +47,7 @@
         </div>
       </div>
       <div class="pagination py-4">
-        {{ $companies->links() }}
+        {{ $companies->withQueryString()->links() }}
       </div>
     </div>
   </div>

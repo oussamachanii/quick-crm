@@ -20,7 +20,7 @@ class CompanyRepository extends BaseRepository
                 ->orWhere(Company::CAPITAL_COLUMN, $search);
         }
 
-        return $query->paginate(10)->withQueryString();
+        return $query->paginate(10);
     }
 
     public function findById(string $id): ?Company
