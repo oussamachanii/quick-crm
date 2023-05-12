@@ -6,6 +6,7 @@ use App\Entities\Admin\Admin;
 use App\Entities\Company\Company;
 use App\Entities\Employee\Employee;
 use App\Entities\Invitation\Invitation;
+use App\Exceptions\Invitation\CannotDeleteInvitationException;
 use Crm\Repositories\Admin\AdminRepository;
 use Crm\Repositories\Company\CompanyRepository;
 use Crm\Repositories\Employee\EmployeeRepository;
@@ -51,5 +52,25 @@ class InvitationService extends BaseService
         }
 
         return $invitation;
+    }
+
+    public function findById(string $id): ?Invitation
+    {
+        return $this->invitationRepository->findById($id);
+    }
+
+    /**
+     * @param Invitation $invitation
+     *
+     * @return bool
+     * @throws CannotDeleteInvitationException
+     */
+    public function delete(Invitation $invitation): bool
+    {
+        if ($invitation->isAccepted()) {
+            throw new CannotDeleteInvitationException($invitation, 'invitation is already accepted');
+        }
+
+        return $this->invitationRepository->delete($invitation->getId());
     }
 }

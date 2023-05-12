@@ -25,7 +25,6 @@ class ListInvitationsController extends BaseAdminController
                 'query'       => $request->query('search'),
             ]);
         } catch (Throwable $e) {
-            dd($e);
             return redirect()
                 ->back()
                 ->withErrors('An error occurred');

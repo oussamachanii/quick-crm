@@ -20,4 +20,18 @@ class InvitationRepository extends BaseRepository
 
         return $query->paginate(10);
     }
+
+    public function findById(string $id): ?Invitation
+    {
+        return Invitation::query()
+            ->where(Invitation::ID_COLUMN, $id)
+            ->first();
+    }
+
+    public function delete(string $id): bool
+    {
+        return Invitation::query()
+            ->where(Invitation::ID_COLUMN, $id)
+            ->delete();
+    }
 }

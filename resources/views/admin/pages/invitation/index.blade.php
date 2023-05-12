@@ -11,8 +11,8 @@
   <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <form
-              class="my-3 py-2 flex flex-end w-full"
-              action="{{ route('admin.invitation.index') }}">
+          class="my-3 py-2 flex flex-end w-full"
+          action="{{ route('admin.invitation.index') }}">
         <x-text-input type="text" placeholder="Search / Press enter" value="{{ $query ?? null }}" name="search" class="auto w-54"></x-text-input>
       </form>
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -40,10 +40,10 @@
                   @if($invitation->isAccepted() && $invitation->getEmployee()->isInactive())
                     <a href="#">Validate</a>
                   @elseif(!$invitation->isAccepted() && ($invitation->getEmployee()?->isInactive() ?? true) === true)
-                    <form action="#" method="POST">
+                    <form action="{{ route('admin.invitation.delete', $invitation->getId()) }}" method="POST">
                       @csrf
                       @method('DELETE')
-                      <button onclick="return confirm('do you want to delete this company')"
+                      <button onclick="return confirm('do you want to delete this invitation')"
                               type="submit"
                               class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete
                       </button>
@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="pagination py-4">
-{{--        {{ $invitation->withQueryString()->links() }}--}}
+        {{ $invitations->withQueryString()->links() }}
       </div>
     </div>
   </div>
