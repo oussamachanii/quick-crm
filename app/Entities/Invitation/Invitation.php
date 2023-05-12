@@ -22,6 +22,8 @@ class Invitation extends ModelUuid
     private ?Admin $admin = null;
     private ?Employee $employee = null;
 
+    protected $guarded = [];
+
     public function getName(): string
     {
         return $this->getAttribute(self::NAME_COLUMN);

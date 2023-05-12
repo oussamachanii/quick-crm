@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Company;
+namespace App\Http\Controllers\Admin\Invitation;
 
 use App\Http\Controllers\Admin\BaseAdminController;
-use App\Http\Requests\Company\StoreCompanyRequest;
 use Crm\Services\Company\CompanyService;
 use Throwable;
 
-class StoreCompanyController extends BaseAdminController
+class CreateInvitationController extends BaseAdminController
 {
     public function __construct(
         readonly private CompanyService $companyService
@@ -15,14 +14,14 @@ class StoreCompanyController extends BaseAdminController
         parent::__construct();
     }
 
-    public function __invoke(StoreCompanyRequest $request)
+    public function __invoke()
     {
         try {
-            $this->companyService->create($request->validated());
+            $companies = $this->companyService->getAll();
 
-            return redirect()
-                ->route('admin.company.index')
-                ->with('success', 'Company is successfully updated');
+            return $this->view('admin.pages.invitation.create', [
+                'companies' => $companies,
+            ]);
         } catch (Throwable $e) {
             return redirect()
                 ->back()

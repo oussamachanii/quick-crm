@@ -12,7 +12,10 @@ use Crm\Repositories\Company\CompanyRepository;
 use Crm\Repositories\Employee\EmployeeRepository;
 use Crm\Repositories\Invitation\InvitationRepository;
 use Crm\Services\BaseService;
+use Crm\Services\Invitation\Events\InvitationWasCreated;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
+use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 
 class InvitationService extends BaseService
 {
@@ -20,7 +23,8 @@ class InvitationService extends BaseService
         readonly private InvitationRepository $invitationRepository,
         readonly private CompanyRepository $companyRepository,
         readonly private AdminRepository $adminRepository,
-        readonly private EmployeeRepository $employeeRepository
+        readonly private EmployeeRepository $employeeRepository,
+        readonly private EventDispatcher $eventDispatcher
     ) {
     }
 
@@ -56,7 +60,17 @@ class InvitationService extends BaseService
 
     public function findById(string $id): ?Invitation
     {
-        return $this->invitationRepository->findById($id);
+        $invitation = $this->invitationRepository->findById($id);
+        if (! $invitation instanceof Invitation) {
+            return null;
+        }
+
+        return $this->hydrate($invitation);
+    }
+
+    public function findByToken(string $token): ?Invitation
+    {
+        return $this->invitationRepository->findByToken($token);
     }
 
     /**
@@ -72,5 +86,24 @@ class InvitationService extends BaseService
         }
 
         return $this->invitationRepository->delete($invitation->getId());
+    }
+
+    /**
+     * @param array $attributes
+     *
+     * @return Invitation
+     * @throws CannotDeleteInvitationException
+     */
+    public function create(array $attributes): Invitation
+    {
+        $invitation = $this->invitationRepository->findByEmail(Arr::get($attributes, Invitation::EMAIL_COLUMN));
+        if ($invitation instanceof Invitation) {
+            throw new CannotDeleteInvitationException($invitation, 'invitation is already created using this email');
+        }
+
+        $invitation = $this->invitationRepository->create($attributes);
+        $this->eventDispatcher->dispatch(new InvitationWasCreated($invitation->getId()));
+
+        return $invitation;
     }
 }

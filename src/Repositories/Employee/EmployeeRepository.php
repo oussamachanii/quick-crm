@@ -3,7 +3,9 @@
 namespace Crm\Repositories\Employee;
 
 use App\Entities\Employee\Employee;
+use App\Entities\Invitation\Invitation;
 use Crm\Repositories\BaseRepository;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class EmployeeRepository extends BaseRepository
@@ -27,5 +29,26 @@ class EmployeeRepository extends BaseRepository
         return Employee::query()
             ->where(Employee::COMPANY_ID_COLUMN, $companyId)
             ->get();
+    }
+
+    public function create(array $attributes): Employee
+    {
+        $attributes = Arr::only(
+            $attributes,
+            [
+                Employee::EMAIL_COLUMN,
+                Employee::NAME_COLUMN,
+                Employee::COMPANY_ID_COLUMN,
+                Employee::ADDRESS_COLUMN,
+                Employee::PHONE_COLUMN,
+                Employee::BIRTHDATE_COLUMN,
+                Employee::STATUS_COLUMN,
+                Employee::PASSWORD_COLUMN,
+                Employee::BIRTHDATE_COLUMN,
+            ]
+        );
+
+        return Employee::query()
+            ->create($attributes);
     }
 }

@@ -6,6 +6,7 @@ use App\Entities\Company\Company;
 use Crm\Repositories\BaseRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class CompanyRepository extends BaseRepository
 {
@@ -66,5 +67,11 @@ class CompanyRepository extends BaseRepository
 
         return Company::query()
             ->create($attributes);
+    }
+
+    public function getAll(): Collection
+    {
+        return Company::query()
+            ->get();
     }
 }

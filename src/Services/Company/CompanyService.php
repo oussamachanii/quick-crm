@@ -8,6 +8,7 @@ use Crm\Repositories\Company\CompanyRepository;
 use Crm\Repositories\Employee\EmployeeRepository;
 use Crm\Services\BaseService;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class CompanyService extends BaseService
 {
@@ -51,5 +52,10 @@ class CompanyService extends BaseService
     public function create(array $attributes): Company
     {
         return $this->companyRepository->create($attributes);
+    }
+
+    public function getAll(): Collection
+    {
+        return $this->companyRepository->getAll();
     }
 }

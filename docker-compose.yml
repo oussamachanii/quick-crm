@@ -27,6 +27,11 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     networks:
       - default
+  mailhog:
+    image: "mailhog/mailhog"
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025" # web ui
 networks:
   default:
     driver: bridge

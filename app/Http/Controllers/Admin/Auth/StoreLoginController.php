@@ -44,6 +44,12 @@ class StoreLoginController extends Controller
         }
     }
 
+    /**
+     * @param string $key
+     *
+     * @return void
+     * @throws ValidationException
+     */
     private function ensureIsNotRateLimited(string $key): void
     {
         if (!$this->rateLimiter->tooManyAttempts($key, 5)) {
