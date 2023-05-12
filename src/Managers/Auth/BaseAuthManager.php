@@ -39,4 +39,9 @@ abstract class BaseAuthManager
     {
         $this->guard()->login($authenticatable, $rememberMe);
     }
+
+    public function logout(): void
+    {
+        $this->guard()->logout();
+    }
 }

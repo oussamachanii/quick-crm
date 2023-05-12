@@ -1,4 +1,5 @@
-<x-guest-layout>
+@extends('admin.layouts.guest')
+@section('content')
 
   <h1 class="text-2xl font-bold p-4 text-center uppercase text-gray-800">Admin</h1>
   <!-- Session Status -->
@@ -42,4 +43,4 @@
       </x-primary-button>
     </div>
   </form>
-</x-guest-layout>
+@endsection

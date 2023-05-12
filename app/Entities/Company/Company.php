@@ -13,6 +13,8 @@ class Company extends ModelUuid
     public const ADDRESS_COLUMN = 'address';
     public const CAPITAL_COLUMN = 'capital';
 
+    protected $guarded = [];
+
     public function getName(): string
     {
         return $this->getAttribute(self::NAME_COLUMN);

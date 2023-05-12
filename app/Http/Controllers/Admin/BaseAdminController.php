@@ -13,9 +13,10 @@ class BaseAdminController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    protected readonly AdminAuthManager $adminAuthManager;
     public function __construct(
-        protected readonly AdminAuthManager $adminAuthManager
     ) {
+        $this->adminAuthManager = app(AdminAuthManager::class);
     }
 
     public function view(string $view, array $data = [])
