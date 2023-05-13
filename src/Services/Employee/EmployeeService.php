@@ -2,9 +2,11 @@
 
 namespace Crm\Services\Employee;
 
+use App\Entities\Company\Company;
 use App\Entities\Employee\Employee;
 use App\Entities\Invitation\Invitation;
 use App\Enums\EmployeeStatus;
+use Crm\Repositories\Company\CompanyRepository;
 use Crm\Repositories\Employee\EmployeeRepository;
 use Crm\Repositories\Invitation\InvitationRepository;
 use Crm\Services\Auth\AuthenticatableService;
@@ -16,13 +18,29 @@ class EmployeeService extends AuthenticatableService
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
         private readonly InvitationRepository $invitationRepository,
+        private readonly CompanyRepository $companyRepository,
         private readonly HashManager $hashManager
     ) {
     }
 
     public function findById(string $id): ?Employee
     {
-        return $this->employeeRepository->findById($id);
+        $employee = $this->employeeRepository->findById($id);
+        if (! $employee instanceof Employee) {
+            return null;
+        }
+
+        return $this->hydrate($employee);
+    }
+
+    private function hydrate(Employee $employee): Employee
+    {
+        $company = $this->companyRepository->findById($employee->getCompanyId());
+        if(! $company instanceof Company) {
+           return $employee;
+        }
+
+        return $employee->setCompany($company);
     }
 
     public function findByEmail(string $email): ?Employee

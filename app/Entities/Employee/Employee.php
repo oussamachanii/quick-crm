@@ -3,6 +3,7 @@
 namespace App\Entities\Employee;
 
 use App\Entities\Authenticatable;
+use App\Entities\Company\Company;
 use App\Enums\EmployeeStatus;
 use Carbon\Carbon;
 use Crm\Services\Employee\EmployeeService;
@@ -20,6 +21,8 @@ class Employee extends Authenticatable
     public const COMPANY_ID_COLUMN = 'company_id';
     public const STATUS_COLUMN = 'status';
     public const PASSWORD_COLUMN = 'password';
+
+    private ?Company $company = null;
 
     protected $guarded = [];
 
@@ -76,5 +79,17 @@ class Employee extends Authenticatable
     public function getPassword(): string
     {
         return $this->getAttribute(self::PASSWORD_COLUMN);
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(Company $company): self
+    {
+        $this->company = $company;
+
+        return $this;
     }
 }
