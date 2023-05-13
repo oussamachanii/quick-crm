@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Invitation\CreateInvitationController;
 use App\Http\Controllers\Admin\Invitation\DeleteInvitationController;
 use App\Http\Controllers\Admin\Invitation\ListInvitationsController;
 use App\Http\Controllers\Admin\Invitation\StoreInvitationController;
+use App\Http\Controllers\Admin\Invitation\ValidateInvitationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('admin.auth')
@@ -14,4 +15,5 @@ Route::middleware('admin.auth')
         Route::get('/create', CreateInvitationController::class)->name('create');
         Route::post('/create', StoreInvitationController::class)->name('store');
         Route::delete('/{id}', DeleteInvitationController::class)->name('delete');
+        Route::post('/{id}/validate', ValidateInvitationController::class)->name('validate');
     });

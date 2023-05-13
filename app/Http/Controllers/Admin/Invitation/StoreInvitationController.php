@@ -30,7 +30,7 @@ class StoreInvitationController extends BaseAdminController
             $this->invitationService->create($attributes);
 
             return redirect()
-                ->route('admin.company.index')
+                ->route('admin.invitation.index')
                 ->with('success', 'Company is successfully updated');
         } catch (CannotDeleteInvitationException $e) {
             return redirect()

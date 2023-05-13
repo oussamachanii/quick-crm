@@ -4,24 +4,23 @@ namespace App\Http\Controllers\Admin\Invitation;
 
 use App\Entities\Employee\Employee;
 use App\Entities\Invitation\Invitation;
-use App\Http\Requests\Invitation\SubmitInvitationRequest;
 use Crm\Services\Employee\EmployeeService;
 use Crm\Services\Invitation\InvitationService;
 use Illuminate\Routing\Controller as BaseController;
 use Throwable;
 
-class SubmitInvitationController extends BaseController
+class ValidateInvitationController extends BaseController
 {
     public function __construct(
         readonly private InvitationService $invitationService,
-        readonly private EmployeeService $employeeService
+        readonly private EmployeeService $employeeService,
     ) {
     }
 
-    public function __invoke(SubmitInvitationRequest $request)
+    public function __invoke(string $id)
     {
         try {
-            $invitation = $this->invitationService->findByToken($request->get('token'));
+            $invitation = $this->invitationService->findById($id);
             if (!$invitation instanceof Invitation) {
                 return redirect()
                     ->route('home')
@@ -29,16 +28,17 @@ class SubmitInvitationController extends BaseController
             }
 
             $employee = $this->employeeService->findByEmail($invitation->getEmail());
-            if ($employee instanceof Employee) {
+            if (!$employee instanceof Employee) {
                 return redirect()
-                    ->back()
-                    ->withErrors('Employee already invited');
+                    ->route('home')
+                    ->withErrors('Employee could not found');
             }
 
-            $this->employeeService->createFromInvitation($invitation, $request->validated());
+            $this->employeeService->validate($employee);
 
             return redirect()
-                ->route('employee.auth.login.show');
+                ->back()
+                ->with('success', 'Employee is successfully validated');
         } catch (Throwable $e) {
             return redirect()
                 ->back()

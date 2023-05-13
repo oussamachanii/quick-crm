@@ -33,12 +33,18 @@
                   {{ $invitation->getCompany()?->getName() }}
                 </td>
                 <td
-                @class(['px-6 py-4', 'text-green-600' => $invitation->isAccepted(), 'text-blue-600' => !$invitation->isAccepted()])>
+                @class(['px-6 py-4', 'text-green-600' => $invitation->isAccepted()])>
                   {{ $invitation->isAccepted() ? 'Accepted' : 'Pending' }}
                 </td>
                 <td class="px-6 py-4 text-right flex space-x-8 gap-2">
                   @if($invitation->isAccepted() && $invitation->getEmployee()->isInactive())
-                    <a href="#">Validate</a>
+                    <form action="{{ route('admin.invitation.validate', $invitation->getId()) }}" method="POST">
+                      @csrf
+                      <button
+                              type="submit"
+                              class="font-medium text-blue-600 hover:underline">Validate
+                      </button>
+                    </form>
                   @elseif(!$invitation->isAccepted() && ($invitation->getEmployee()?->isInactive() ?? true) === true)
                     <form action="{{ route('admin.invitation.delete', $invitation->getId()) }}" method="POST">
                       @csrf

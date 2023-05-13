@@ -1,7 +1,9 @@
 <?php
 
 use App\Entities\Admin\Admin;
+use App\Entities\Employee\Employee;
 use Crm\Managers\Auth\Admin\AdminAuthManager;
+use Crm\Managers\Auth\Employee\EmployeeAuthManager;
 
 return [
 
@@ -39,10 +41,14 @@ return [
     */
 
     'guards' => [
-        AdminAuthManager::GUARD_NAME => [
+        AdminAuthManager::GUARD_NAME    => [
             'driver'   => 'session',
             'provider' => Admin::TABLE_NAME,
-        ]
+        ],
+        EmployeeAuthManager::GUARD_NAME => [
+            'driver'   => 'session',
+            'provider' => Employee::TABLE_NAME,
+        ],
     ],
 
     /*
@@ -63,10 +69,14 @@ return [
     */
 
     'providers' => [
-        Admin::TABLE_NAME => [
+        Admin::TABLE_NAME    => [
             'driver' => 'eloquent',
             'model'  => Admin::class,
-        ]
+        ],
+        Employee::TABLE_NAME => [
+            'driver' => 'eloquent',
+            'model'  => Employee::class,
+        ],
     ],
 
     /*

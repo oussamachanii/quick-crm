@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\Invitation\ConnectInvitationController;
 use App\Http\Controllers\Admin\Invitation\SubmitInvitationController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,22 +17,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+})->name('welcome');
 
 Route::name('admin.')
     ->prefix('admin/')
     ->group(function () {
         require __DIR__ . '/admin/web.php';
+    });
+
+Route::name('employee.')
+    ->prefix('employee/')
+    ->group(function () {
+        require __DIR__ . '/employee/web.php';
     });
 
 Route::get('/invitation/connect/{token}', ConnectInvitationController::class)->name('invitation.connect');

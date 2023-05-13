@@ -42,13 +42,25 @@ class EmployeeService extends AuthenticatableService
                 Employee::BIRTHDATE_COLUMN  => Arr::get($attributes, Employee::BIRTHDATE_COLUMN),
                 Employee::STATUS_COLUMN     => EmployeeStatus::INACTIVE,
                 Employee::PASSWORD_COLUMN   => $this->hashManager->make(
-                    Arr::get($attributes, Employee::BIRTHDATE_COLUMN)
+                    Arr::get($attributes, Employee::PASSWORD_COLUMN)
                 ),
             ]
         );
 
-        $this->invitationRepository->update($invitation, [Invitation::TOKEN_COLUMN => null]);
+        $this->invitationRepository->update($invitation->getId(), [Invitation::TOKEN_COLUMN => null]);
 
         return $employee;
+    }
+
+    public function validate(Employee $employee): bool
+    {
+        return $this->update($employee, [
+            Employee::STATUS_COLUMN => EmployeeStatus::ACTIVE
+        ]);
+    }
+
+    public function update(Employee $employee, array $attributes): bool
+    {
+        return $this->employeeRepository->update($employee->getId(), $attributes);
     }
 }

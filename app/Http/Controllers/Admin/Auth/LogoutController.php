@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Auth;
 
-use App\Http\Controllers\Controller;
-use Crm\Managers\Auth\Admin\AdminAuthManager;
+use App\Http\Controllers\Admin\BaseAdminController;
 use Throwable;
 
-class LogoutController extends Controller
+class LogoutController extends BaseAdminController
 {
-    public function __construct(
-        private readonly AdminAuthManager $adminAuthManager
-    ) {
-        parent::__construct();
-    }
 
     public function __invoke()
     {
@@ -20,7 +14,7 @@ class LogoutController extends Controller
             $this->adminAuthManager->logout();
 
             return redirect()
-                ->route('admin.auth.login.show');
+                ->route('welcome');
         } catch (Throwable $e) {
             // Log here
             return redirect()

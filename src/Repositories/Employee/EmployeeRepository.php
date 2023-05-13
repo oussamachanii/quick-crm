@@ -51,4 +51,26 @@ class EmployeeRepository extends BaseRepository
         return Employee::query()
             ->create($attributes);
     }
+
+    public function update(string $id, array $attributes): bool
+    {
+        $attributes = Arr::only(
+            $attributes,
+            [
+                Employee::EMAIL_COLUMN,
+                Employee::NAME_COLUMN,
+                Employee::COMPANY_ID_COLUMN,
+                Employee::ADDRESS_COLUMN,
+                Employee::PHONE_COLUMN,
+                Employee::BIRTHDATE_COLUMN,
+                Employee::STATUS_COLUMN,
+                Employee::PASSWORD_COLUMN,
+                Employee::BIRTHDATE_COLUMN,
+            ]
+        );
+
+        return Employee::query()
+            ->where(Employee::ID_COLUMN, $id)
+            ->update($attributes);
+    }
 }
