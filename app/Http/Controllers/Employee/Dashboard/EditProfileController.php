@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Employee\Dashboard;
 
 use App\Http\Controllers\Employee\BaseEmployeeController;
+
 use Throwable;
 
-class ShowDashboardController extends BaseEmployeeController
+class EditProfileController extends BaseEmployeeController
 {
     public function __invoke()
     {
         try {
-            return $this->view('employee.pages.dashboard');
+            return $this->view('employee.pages.update');
         } catch (Throwable $e) {
             // Log the error here
             return redirect()

@@ -12,6 +12,7 @@ use Crm\Repositories\Invitation\InvitationRepository;
 use Crm\Services\Auth\AuthenticatableService;
 use Illuminate\Support\Arr;
 use Illuminate\Hashing\HashManager;
+use Illuminate\Support\Collection;
 
 class EmployeeService extends AuthenticatableService
 {
@@ -26,7 +27,7 @@ class EmployeeService extends AuthenticatableService
     public function findById(string $id): ?Employee
     {
         $employee = $this->employeeRepository->findById($id);
-        if (! $employee instanceof Employee) {
+        if (!$employee instanceof Employee) {
             return null;
         }
 
@@ -36,8 +37,8 @@ class EmployeeService extends AuthenticatableService
     private function hydrate(Employee $employee): Employee
     {
         $company = $this->companyRepository->findById($employee->getCompanyId());
-        if(! $company instanceof Company) {
-           return $employee;
+        if (!$company instanceof Company) {
+            return $employee;
         }
 
         return $employee->setCompany($company);
@@ -73,12 +74,24 @@ class EmployeeService extends AuthenticatableService
     public function validate(Employee $employee): bool
     {
         return $this->update($employee, [
-            Employee::STATUS_COLUMN => EmployeeStatus::ACTIVE
+            Employee::STATUS_COLUMN => EmployeeStatus::ACTIVE,
         ]);
     }
 
     public function update(Employee $employee, array $attributes): bool
     {
         return $this->employeeRepository->update($employee->getId(), $attributes);
+    }
+
+    public function updateProfile(Employee $employee, array $attributes): bool
+    {
+        $password = Arr::get($attributes, Employee::PASSWORD_COLUMN);
+        if ($password) {
+            Arr::set($attributes, Employee::PASSWORD_COLUMN, $this->hashManager->make($password));
+        }
+
+        $attributes = Collection::make($attributes)->filter(fn($item) => $item !== null);
+
+        return $this->update($employee, $attributes->toArray());
     }
 }

@@ -15,7 +15,7 @@ class ShowLoginController extends Controller
             // Log the error here
             return redirect()
                 ->back()
-                ->withErrors('could not show login page');
+                ->withErrors('an error has been occurred');
         }
     }
 }

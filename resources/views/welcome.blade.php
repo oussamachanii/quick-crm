@@ -16,7 +16,7 @@
     <body class="antialiased bg-gray-50">
         <div class="flex items-center justify-center min-w-screen min-h-screen">
             <div class="grid gap-4 p-6 border  bg-white rounded">
-                <h1 style="font-size: 4rem;" class="font-semibold text-gray-800 text-center">Welcome</h1>
+                <h1 style="font-size: 2rem;" class="font-semibold mb-4 text-gray-800 text-center">Welcome</h1>
                 <div class="flex gap-4">
                     <a href="{{ route('admin.auth.login.show') }}"
                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
