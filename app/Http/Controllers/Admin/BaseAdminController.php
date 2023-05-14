@@ -38,6 +38,7 @@ class BaseAdminController extends BaseController
         $admin = $this->adminAuthManager->user();
 
         if (!$admin instanceof Admin) {
+            // We can globally catch this exception and redirect to the login page
             throw new AdminNotLoggedInException();
         }
 

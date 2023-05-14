@@ -13,6 +13,8 @@ class Admin extends Authenticatable
     public const EMAIL_COLUMN = 'email';
     public const PASSWORD_COLUMN = 'password';
 
+    protected $guarded = [];
+
     public function getName(): string
     {
         return $this->getAttribute(self::NAME_COLUMN);

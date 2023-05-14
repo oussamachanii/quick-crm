@@ -4,6 +4,8 @@ namespace Crm\Repositories\Admin;
 
 use App\Entities\Admin\Admin;
 use Crm\Repositories\BaseRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 
 class AdminRepository extends BaseRepository
 {
@@ -19,5 +21,26 @@ class AdminRepository extends BaseRepository
         return Admin::query()
             ->where(Admin::EMAIL_COLUMN, $findByEmail)
             ->first();
+    }
+
+    public function create(array $attributes): Admin
+    {
+        $attributes = Arr::only($attributes,
+            [
+                Admin::NAME_COLUMN,
+                Admin::EMAIL_COLUMN,
+                Admin::PASSWORD_COLUMN
+            ]
+        );
+
+        return Admin::query()
+            ->create($attributes);
+    }
+
+    public function getPaginated(string $adminId): LengthAwarePaginator
+    {
+        return Admin::query()
+            ->whereNot(Admin::ID_COLUMN, $adminId)
+            ->paginate(10);
     }
 }

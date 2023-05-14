@@ -43,6 +43,7 @@ class BaseEmployeeController extends BaseController
         $employee = $this->employeeAuthManager->user();
 
         if (!$employee instanceof Employee) {
+            // We can globally catch this exception and redirect to the login page
             throw new EmployeeNotLoggedInException();
         }
 
