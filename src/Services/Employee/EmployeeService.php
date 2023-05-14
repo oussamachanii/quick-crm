@@ -4,9 +4,14 @@ namespace Crm\Services\Employee;
 
 use App\Entities\Company\Company;
 use App\Entities\Employee\Employee;
+use App\Entities\History\History;
 use App\Entities\Invitation\Invitation;
 use App\Enums\EmployeeStatus;
+use App\Enums\HistoryAction;
+use App\Enums\HistoryActionableTypes;
+use App\Enums\HistoryUsableTypes;
 use Crm\Locators\CurrentEmployeeLocator;
+use Crm\Repositories\Admin\HistoryRepository;
 use Crm\Repositories\Company\CompanyRepository;
 use Crm\Repositories\Employee\EmployeeRepository;
 use Crm\Repositories\Invitation\InvitationRepository;
@@ -22,7 +27,8 @@ class EmployeeService extends AuthenticatableService
         private readonly InvitationRepository $invitationRepository,
         private readonly CompanyRepository $companyRepository,
         private readonly HashManager $hashManager,
-        private readonly CurrentEmployeeLocator $employeeLocator
+        private readonly CurrentEmployeeLocator $employeeLocator,
+        private readonly HistoryRepository $historyRepository
     ) {
     }
 
@@ -68,13 +74,37 @@ class EmployeeService extends AuthenticatableService
             ]
         );
 
+        $this->historyRepository->create(
+            [
+                History::USEABLE_ID_COLUMN      => $employee->getId(),
+                History::USEABLE_TYPE_COLUMN    => HistoryUsableTypes::EMPLOYEE,
+                History::USEABLE_NAME_COLUMN    => $employee->getName(),
+                History::ACTION_COLUMN          => HistoryAction::CONFIRMED,
+                History::ACTIONABLE_ID_COLUMN   => $invitation->getId(),
+                History::ACTIONABLE_NAME_COLUMN => $invitation->getName(),
+                History::ACTIONABLE_TYPE_COLUMN => HistoryActionableTypes::INVITATION,
+            ]
+        );
+
         $this->invitationRepository->update($invitation->getId(), [Invitation::TOKEN_COLUMN => null]);
 
         return $employee;
     }
 
-    public function validate(Employee $employee): bool
+    public function validate(Employee $employee, Invitation $invitation): bool
     {
+        $this->historyRepository->create(
+            [
+                History::USEABLE_ID_COLUMN      => $employee->getId(),
+                History::USEABLE_TYPE_COLUMN    => HistoryUsableTypes::EMPLOYEE,
+                History::USEABLE_NAME_COLUMN    => $employee->getName(),
+                History::ACTION_COLUMN          => HistoryAction::VALIDATES,
+                History::ACTIONABLE_ID_COLUMN   => $invitation->getId(),
+                History::ACTIONABLE_NAME_COLUMN => $invitation->getName(),
+                History::ACTIONABLE_TYPE_COLUMN => HistoryActionableTypes::INVITATION,
+            ]
+        );
+
         return $this->update($employee, [
             Employee::STATUS_COLUMN => EmployeeStatus::ACTIVE,
         ]);

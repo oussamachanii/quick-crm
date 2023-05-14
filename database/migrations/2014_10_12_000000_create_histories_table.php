@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->timestamp('created_at');
-            $table->string('usable_type');
-            $table->string('usable_id');
+            $table->integer('usable_type');
+            $table->uuid('usable_id');
             $table->string('usable_name');
             $table->integer('action');
-            $table->integer('actionable_id');
+            $table->uuid('actionable_id')->nullable();
             $table->integer('actionable_type');
-            $table->integer('actionable_name');
+            $table->string('actionable_name');
         });
     }
 

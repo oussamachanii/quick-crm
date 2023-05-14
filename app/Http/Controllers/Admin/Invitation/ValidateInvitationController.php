@@ -34,7 +34,7 @@ class ValidateInvitationController extends BaseController
                     ->withErrors('Employee could not found');
             }
 
-            $this->employeeService->validate($employee);
+            $this->employeeService->validate($employee, $invitation);
 
             return redirect()
                 ->back()

@@ -10,4 +10,5 @@ enum HistoryAction: int
     case CREATED = 4;
     case DELETED = 5;
     case EDITED = 6;
+    case CANCELED = 7;
 }

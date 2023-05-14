@@ -5,9 +5,15 @@ namespace Crm\Services\Invitation;
 use App\Entities\Admin\Admin;
 use App\Entities\Company\Company;
 use App\Entities\Employee\Employee;
+use App\Entities\History\History;
 use App\Entities\Invitation\Invitation;
+use App\Enums\HistoryAction;
+use App\Enums\HistoryActionableTypes;
+use App\Enums\HistoryUsableTypes;
 use App\Exceptions\Invitation\CannotDeleteInvitationException;
+use Crm\Locators\CurrentAdminLocator;
 use Crm\Repositories\Admin\AdminRepository;
+use Crm\Repositories\Admin\HistoryRepository;
 use Crm\Repositories\Company\CompanyRepository;
 use Crm\Repositories\Employee\EmployeeRepository;
 use Crm\Repositories\Invitation\InvitationRepository;
@@ -24,7 +30,9 @@ class InvitationService extends BaseService
         readonly private CompanyRepository $companyRepository,
         readonly private AdminRepository $adminRepository,
         readonly private EmployeeRepository $employeeRepository,
-        readonly private EventDispatcher $eventDispatcher
+        readonly private EventDispatcher $eventDispatcher,
+        readonly private HistoryRepository $historyRepository,
+        readonly private CurrentAdminLocator $currentAdminLocator
     ) {
     }
 
@@ -61,7 +69,7 @@ class InvitationService extends BaseService
     public function findById(string $id): ?Invitation
     {
         $invitation = $this->invitationRepository->findById($id);
-        if (! $invitation instanceof Invitation) {
+        if (!$invitation instanceof Invitation) {
             return null;
         }
 
@@ -85,6 +93,19 @@ class InvitationService extends BaseService
             throw new CannotDeleteInvitationException($invitation, 'invitation is already accepted');
         }
 
+        $admin = $this->currentAdminLocator->getAdmin();
+        $this->historyRepository->create(
+            [
+                History::USEABLE_ID_COLUMN      => $admin->getId(),
+                History::USEABLE_TYPE_COLUMN    => HistoryUsableTypes::ADMIN,
+                History::USEABLE_NAME_COLUMN    => $admin->getName(),
+                History::ACTION_COLUMN          => HistoryAction::CANCELED,
+                History::ACTIONABLE_ID_COLUMN   => $invitation->getId(),
+                History::ACTIONABLE_NAME_COLUMN => $invitation->getName(),
+                History::ACTIONABLE_TYPE_COLUMN => HistoryActionableTypes::INVITATION,
+            ]
+        );
+
         return $this->invitationRepository->delete($invitation->getId());
     }
 
@@ -103,6 +124,19 @@ class InvitationService extends BaseService
 
         $invitation = $this->invitationRepository->create($attributes);
         $this->eventDispatcher->dispatch(new InvitationWasCreated($invitation->getId()));
+
+        $admin = $this->currentAdminLocator->getAdmin();
+        $this->historyRepository->create(
+            [
+                History::USEABLE_ID_COLUMN      => $admin->getId(),
+                History::USEABLE_TYPE_COLUMN    => HistoryUsableTypes::ADMIN,
+                History::USEABLE_NAME_COLUMN    => $admin->getName(),
+                History::ACTION_COLUMN          => HistoryAction::INVITES,
+                History::ACTIONABLE_ID_COLUMN   => $invitation->getCompanyId(),
+                History::ACTIONABLE_NAME_COLUMN => $invitation->getName(),
+                History::ACTIONABLE_TYPE_COLUMN => HistoryActionableTypes::EMPLOYEE,
+            ]
+        );
 
         return $invitation;
     }
