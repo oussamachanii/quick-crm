@@ -3,6 +3,7 @@
 namespace Crm\Services\Admin;
 
 use App\Entities\Admin\Admin;
+use Crm\Locators\CurrentAdminLocator;
 use Crm\Repositories\Admin\AdminRepository;
 use Crm\Services\Auth\AuthenticatableService;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -13,7 +14,8 @@ class AdminService extends AuthenticatableService
 {
     public function __construct(
         readonly private AdminRepository $adminRepository,
-        readonly private HashManager $hashManager
+        readonly private HashManager $hashManager,
+        readonly private CurrentAdminLocator $adminLocator
     ) {
     }
 
@@ -33,8 +35,10 @@ class AdminService extends AuthenticatableService
         return $this->adminRepository->create($attributes);
     }
 
-    public function getPaginated(Admin $admin): LengthAwarePaginator
+    public function getPaginated(): LengthAwarePaginator
     {
+        $admin = $this->adminLocator->getAdmin();
+
         return $this->adminRepository->getPaginated($admin->getId());
     }
 }

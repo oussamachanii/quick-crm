@@ -3,6 +3,7 @@
 namespace App\Http\Middleware\Employee;
 
 use App\Entities\Employee\Employee;
+use Crm\Locators\CurrentEmployeeLocator;
 use Crm\Managers\Auth\Employee\EmployeeAuthManager;
 use Illuminate\Http\Request;
 use Closure;
@@ -10,7 +11,8 @@ use Closure;
 class AuthenticatedMiddleware
 {
     public function __construct(
-        private readonly EmployeeAuthManager $employeeAuthManager
+        private readonly EmployeeAuthManager $employeeAuthManager,
+        private readonly CurrentEmployeeLocator $employeeLocator
     ) {
     }
 
@@ -22,6 +24,9 @@ class AuthenticatedMiddleware
             return redirect()
                 ->route('employee.auth.login.show');
         }
+
+        // Can be isolated into its own middleware
+        $this->employeeLocator->setEmployee($employee);
 
         return $next($request);
     }

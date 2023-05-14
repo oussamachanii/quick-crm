@@ -18,13 +18,12 @@ class ListAdminsController extends BaseAdminController
     public function __invoke()
     {
         try {
-            $admins = $this->adminService->getPaginated($this->getCurrentAdmin());
+            $admins = $this->adminService->getPaginated();
 
             return $this->view('admin.pages.index', [
                 'admins' => $admins
             ]);
         } catch (Throwable $e) {
-            dd($e);
             // Log here
             return redirect()
                 ->back()

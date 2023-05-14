@@ -18,7 +18,7 @@ class UpdateProfileController extends BaseEmployeeController
     public function __invoke(UpdateProfileRequest $request)
     {
         try {
-            $this->employeeService->updateProfile($this->getCurrentEmployee(), $request->validated());
+            $this->employeeService->updateProfile($request->validated());
 
             return redirect()
                 ->back()

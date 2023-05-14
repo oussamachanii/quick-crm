@@ -6,6 +6,7 @@ use App\Entities\Company\Company;
 use App\Entities\Employee\Employee;
 use App\Entities\Invitation\Invitation;
 use App\Enums\EmployeeStatus;
+use Crm\Locators\CurrentEmployeeLocator;
 use Crm\Repositories\Company\CompanyRepository;
 use Crm\Repositories\Employee\EmployeeRepository;
 use Crm\Repositories\Invitation\InvitationRepository;
@@ -20,7 +21,8 @@ class EmployeeService extends AuthenticatableService
         private readonly EmployeeRepository $employeeRepository,
         private readonly InvitationRepository $invitationRepository,
         private readonly CompanyRepository $companyRepository,
-        private readonly HashManager $hashManager
+        private readonly HashManager $hashManager,
+        private readonly CurrentEmployeeLocator $employeeLocator
     ) {
     }
 
@@ -83,8 +85,10 @@ class EmployeeService extends AuthenticatableService
         return $this->employeeRepository->update($employee->getId(), $attributes);
     }
 
-    public function updateProfile(Employee $employee, array $attributes): bool
+    public function updateProfile(array $attributes): bool
     {
+        $employee = $this->employeeLocator->getEmployee();
+
         $password = Arr::get($attributes, Employee::PASSWORD_COLUMN);
         if ($password) {
             Arr::set($attributes, Employee::PASSWORD_COLUMN, $this->hashManager->make($password));
