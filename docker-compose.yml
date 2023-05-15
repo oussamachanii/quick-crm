@@ -13,6 +13,7 @@ services:
       - 'host.docker.internal:host-gateway'
     depends_on:
       - mysql
+      - mailhog
     networks:
       - default
   mysql:
