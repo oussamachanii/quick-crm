@@ -16,6 +16,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
+            @include('_partials.base.notices')
             @include('admin.layouts.navigation')
 
             <!-- Page Heading -->
