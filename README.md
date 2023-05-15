@@ -16,29 +16,37 @@ This quick crm is a quick (As its title said) Crm application, that represent my
 
 - [ ] Clone Code Using ssh
     ```
-        git clone git@github.com:oussamachanii/quick-crm.git
+    git clone git@github.com:oussamachanii/quick-crm.git
     ```
 - [ ] Change directory to the cloned project
     ```
-        cd quick-crm/
+    cd quick-crm/
     ```
-- [ ] Run the build script which will
+- [ ] Run the build script
+  ```
+  bash build.sh
+  ```
   
+  Which will 
   - Build the necessary containers
-    - Php8.2 alpine
-    - Mysql
-    - MailHog
+    - Php8.2 alpine [8000]
+    - Mysql [3306]
+    - MailHog [1025]
     ```
-        docker-compose up -d
+    docker-compose up -d
     ```
     - Run the migration
     ```
-        php artisan migrate
+    php artisan migrate
+    ```
+    - Run assets
+    ```
+    npm i && npm run build
     ```
 
   - Seed the project
     ```
-        php artisan db:seed
+    php artisan db:seed
     ```
 ## Pages
 ### Admin space
